@@ -1,4 +1,7 @@
 .idea
 go.sum
 data.db
+spm.json
+spm.yml
+spm.yaml
 

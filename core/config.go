@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 type Database struct {
@@ -22,8 +23,8 @@ type Logger struct {
 	Level string 		`json:"level" yaml:"level"`
 	Path string 		`json:"path" yaml:"path"`
 	Filename string 	`json:"filename" yaml:"filename"`
-	MaxAge int32 		`json:"maxAge" yaml:"maxAge"`
-	RotationTime int32 	`json:"rotationTime" yaml:"rotationTime"`
+	MaxAge time.Duration 		`json:"maxAge" yaml:"maxAge"`
+	RotationTime time.Duration 	`json:"rotationTime" yaml:"rotationTime"`
 }
 
 type Config struct {
@@ -71,6 +72,10 @@ func (c *Config) Load() error{
 		return err
 	}
 	configFile := filepath.Join(currentPath, "spm.yml")
+	if IsExists(configFile) {
+		return c.loadFormYml(configFile)
+	}
+	configFile = filepath.Join(currentPath, "spm.yaml")
 	if IsExists(configFile) {
 		return c.loadFormYml(configFile)
 	}

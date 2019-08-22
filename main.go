@@ -8,22 +8,26 @@ import (
 	"os/signal"
 	"spm-serv/controller"
 	"spm-serv/core"
+	"spm-serv/dao"
 	"syscall"
 	"time"
 )
 
-func beforeStartup(){
+func beforeStartup() *core.Config{
 	err := core.Global.Load()
 	if err!=nil {
 		panic(err)
 	}
+	core.InitLog(&core.Global)
+	dao.InitDao(&core.Global)
+	return &core.Global
 }
 
-func startup(){
+func startup(config *core.Config){
 	engine := gin.Default()
 	controller.Validator()
 	controller.Router(engine)
-	serv := &http.Server{Addr:":8000", Handler: engine}
+	serv := &http.Server{Addr:":" + config.Server.Port, Handler: engine}
 
 	go func(){
 		if err := serv.ListenAndServe(); err!=nil && err!=http.ErrServerClosed {
@@ -49,6 +53,6 @@ func startup(){
 }
 
 func main() {
-	beforeStartup()
-	startup()
+	config := beforeStartup()
+	startup(config)
 }

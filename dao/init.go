@@ -6,14 +6,13 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/satori/go.uuid"
 	"io/ioutil"
+	"spm-serv/core"
 )
 
-const DB = "sqlite3"
-const SQLITE_DB = "/home/abeir/workspace/syberos/spm-serv/data.db"
-
-func init(){
+//初始化Dao
+func InitDao(config *core.Config){
 	engine := GoMybatis.GoMybatisEngine{}.New()
-	_, err := engine.Open(DB, SQLITE_DB)
+	_, err := engine.Open(config.Database.Name, config.Database.Url)
 	if err!=nil {
 		panic(err)
 	}

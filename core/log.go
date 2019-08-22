@@ -52,13 +52,27 @@ func IsPanicEnabled() bool{
 	return Log.GetLevel() <= logrus.PanicLevel
 }
 
-
-func initLog(config *Config){
-	configLocalFilesystemLogger("/home/abeir/doc/test", "demo", time.Minute * 60 * 24 * 60, time.Minute * 60 * 24)
+//初始化日志
+func InitLog(config *Config){
+	var maxAgeDuration time.Duration
+	var rotationTimeDuration time.Duration
+	maxAge := config.Logger.MaxAge
+	if maxAge <= 0 {
+		maxAgeDuration = time.Hour * 24 * 60		//60天
+	}else{
+		maxAgeDuration = time.Minute * maxAge
+	}
+	rotationTime := config.Logger.RotationTime
+	if rotationTime <= 0 {
+		rotationTimeDuration = time.Hour * 24	//1天
+	}else{
+		rotationTimeDuration = time.Minute * rotationTime
+	}
+	configLocalFilesystemLogger(config.Logger.Path, config.Logger.Filename, maxAgeDuration, rotationTimeDuration)
 
 	lv := toLevel(config.Logger.Level)
-	if lv < 0 {
-		panic(errors.New(""))
+	if lv > 100 {
+		lv = logrus.DebugLevel
 	}
 	Log.SetLevel(lv)
 }
@@ -80,7 +94,7 @@ func toLevel(levelString string) logrus.Level{
 	case Panic:
 		return logrus.PanicLevel
 	default:
-		return -1
+		return 999
 	}
 }
 
@@ -98,6 +112,7 @@ func configLocalFilesystemLogger(logPath string, logFileName string, maxAge time
 	)
 	if err != nil {
 		Log.Errorf("config local file system logger error. %+v", errors.WithStack(err))
+		panic(err)
 	}
 
 	lfHook := lfshook.NewHook(lfshook.WriterMap{
