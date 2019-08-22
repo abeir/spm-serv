@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://raw.githubusercontent.com/zhuxiujia/GoMybatis/master/mybatis-3-mapper.dtd">
+<mapper>
+    <resultMap id="BaseResultMap" tables="last_version">
+        <id column="id" property="id"/>
+        <result column="pkg_name" property="pkgName" langType="string"/>
+        <result column="pkg_version" property="pkgVersion" langType="string"/>
+        <result column="pkg_profile_id" property="pkgProfileId" langType="string"/>
+        <result column="created_at" property="createdAt" langType="time.Time"/>
+        <result column="updated_at" property="updatedAt" langType="time.Time"/>
+    </resultMap>
+
+    <select id="SelectByPkgNameLike" resultMap="BaseResultMap">
+        SELECT id, pkg_name, pkg_version, pkg_profile_id, created_at
+        FROM last_version
+        WHERE pkg_name LIKE #{pkgName}
+    </select>
+    <select id="SelectByPkgName" resultMap="BaseResultMap">
+        SELECT id, pkg_name, pkg_version, pkg_profile_id, created_at
+        FROM last_version
+        WHERE pkg_name = #{pkgName}
+    </select>
+
+    <insertTemplete id="Insert" tables="last_version"/>
+    <updateTemplete id="UpdateByPkgName" tables="last_version" wheres="pkg_version=#{pkgName}"/>
+</mapper>
