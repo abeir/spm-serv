@@ -2,7 +2,7 @@ package dao
 
 import "spm-serv/model/po"
 
-var UpgradeVersionDaoImp = UpgradeVersionDao{}
+var UpgradeVersionDaoImpl = UpgradeVersionDao{}
 
 type UpgradeVersionDao struct {
 	//查询最新的版本

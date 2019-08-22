@@ -6,7 +6,6 @@ import (
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"path"
-	"strings"
 	"time"
 )
 
@@ -68,40 +67,23 @@ func InitLog(config *Config){
 	}else{
 		rotationTimeDuration = time.Minute * rotationTime
 	}
-	configLocalFilesystemLogger(config.Logger.Path, config.Logger.Filename, maxAgeDuration, rotationTimeDuration)
-
-	lv := toLevel(config.Logger.Level)
-	if lv > 100 {
-		lv = logrus.DebugLevel
-	}
-	Log.SetLevel(lv)
+	configLocalFilesystemLogger(config.Logger.Level,
+		config.Logger.Path,
+		config.Logger.Filename,
+		maxAgeDuration,
+		rotationTimeDuration)
 }
-
-func toLevel(levelString string) logrus.Level{
-	switch strings.ToLower(levelString) {
-	case Trace:
-		return logrus.TraceLevel
-	case Debug:
-		return logrus.DebugLevel
-	case Info:
-		return logrus.InfoLevel
-	case Warn:
-		return logrus.WarnLevel
-	case Error:
-		return logrus.ErrorLevel
-	case Fatal:
-		return logrus.FatalLevel
-	case Panic:
-		return logrus.PanicLevel
-	default:
-		return 999
-	}
-}
-
 
 // config logrus log to local filesystem, with file rotation
-func configLocalFilesystemLogger(logPath string, logFileName string, maxAge time.Duration, rotationTime time.Duration) {
+func configLocalFilesystemLogger(level string, logPath string, logFileName string,
+				maxAge time.Duration, rotationTime time.Duration) {
 	Log = logrus.New()
+
+	lv, err := logrus.ParseLevel(level)
+	if err!=nil {
+		panic(err)
+	}
+	Log.SetLevel(lv)
 
 	baseLogPath := path.Join(logPath, logFileName)
 	writer, err := rotatelogs.New(

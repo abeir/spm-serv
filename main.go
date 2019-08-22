@@ -24,7 +24,10 @@ func beforeStartup() *core.Config{
 }
 
 func startup(config *core.Config){
-	engine := gin.Default()
+	controller.SetMode(config)
+	engine := gin.New()
+	engine.Use(gin.Recovery())
+	engine.Use(controller.Logger())
 	controller.Validator()
 	controller.Router(engine)
 	serv := &http.Server{Addr:":" + config.Server.Port, Handler: engine}

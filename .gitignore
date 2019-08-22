@@ -1,8 +1,9 @@
 .idea
 go.sum
 data.db
-spm.json
+config/spm.json
 spm.yml
 spm.yaml
 main
+spm-serv
 

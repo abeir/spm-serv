@@ -10,7 +10,7 @@ import (
 func UpgradeService(req *model.UpgradeRequest) (*model.UpgradeResponse, error){
 	core.Log.Debugf("UpgradeService request: %+v\n", req)
 
-	upgradeVersion, err := dao.UpgradeVersionDaoImp.SelectLatestVersion()
+	upgradeVersion, err := dao.UpgradeVersionDaoImpl.SelectLatestVersion()
 	if err!=nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func UpgradeService(req *model.UpgradeRequest) (*model.UpgradeResponse, error){
 func DownloadVersion(req *model.UpgradeRequest) (string, error){
 	core.Log.Debugf("DownloadVersion request: %+v\n", req)
 
-	upgradeVersion, err := dao.UpgradeVersionDaoImp.SelectByVersion(req.Version)
+	upgradeVersion, err := dao.UpgradeVersionDaoImpl.SelectByVersion(req.Version)
 	if err!=nil {
 		return "", err
 	}
