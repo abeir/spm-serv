@@ -12,17 +12,6 @@ import (
 var Log *logrus.Logger
 
 
-const (
-	Trace = "trace"
-	Debug = "debug"
-	Info = "info"
-	Warn = "warn"
-	Error = "error"
-	Fatal = "fatal"
-	Panic = "panic"
-)
-
-
 func IsTraceEnabled() bool{
 	return Log.GetLevel() <= logrus.TraceLevel
 }
@@ -81,7 +70,7 @@ func configLocalFilesystemLogger(level string, logPath string, logFileName strin
 
 	lv, err := logrus.ParseLevel(level)
 	if err!=nil {
-		panic(err)
+		Log.Panicf("cannot parse log level: %s, %+v", level, errors.WithStack(err))
 	}
 	Log.SetLevel(lv)
 
@@ -93,8 +82,7 @@ func configLocalFilesystemLogger(level string, logPath string, logFileName strin
 		rotatelogs.WithRotationTime(rotationTime), // 日志切割时间间隔
 	)
 	if err != nil {
-		Log.Errorf("config local file system logger error. %+v", errors.WithStack(err))
-		panic(err)
+		Log.Panicf("config local file system logger error. %+v", errors.WithStack(err))
 	}
 
 	lfHook := lfshook.NewHook(lfshook.WriterMap{

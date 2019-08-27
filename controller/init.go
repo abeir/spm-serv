@@ -4,27 +4,49 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"gopkg.in/go-playground/validator.v8"
-	vaildate "spm-serv/controller/validate"
+	"spm-serv/controller/validation"
 	"spm-serv/core"
 	"time"
 )
 
 func Router(engine *gin.Engine){
+	spmController := SpmController{}
+	engine.GET("/ping", spmController.Ping)
+	engine.POST("/publish", spmController.Publish)
+	engine.GET("/search", spmController.Search)
+	engine.GET("/info", spmController.Info)
+	engine.GET("/upgrade", spmController.Upgrade)
+	engine.GET("/download", spmController.Download)
 
-	engine.GET("/ping", Ping)
-	engine.POST("/publish", Publish)
-	engine.GET("/search", Search)
-	engine.GET("/info", Info)
-	engine.GET("/upgrade", Upgrade)
-	engine.GET("/download", Download)
+	console := engine.Group("/console")
+	{
+		consoleController := ConsoleController{}
+		console.POST("/login", consoleController.Login)
+		console.POST("/logout", consoleController.Logout)
+	}
+	upgrade := engine.Group("/upgrade")
+	{
+		upgradeController := UpgradeVersionController{}
+		upgrade.GET("/list", upgradeController.List)
+		upgrade.GET("/info", upgradeController.Info)
+		upgrade.PUT("/upload", upgradeController.Upload)
+		upgrade.PUT("/release", upgradeController.Release)
+		upgrade.PUT("/detain", upgradeController.Detain)
+	}
+	pkg := engine.Group("/package")
+	{
+		packageController := PackageController{}
+		pkg.GET("/list", packageController.List)
+		pkg.GET("/info", packageController.Info)
+		pkg.PUT("/enable", packageController.Enable)
+		pkg.PUT("/disable", packageController.Disable)
+	}
 }
 
 func Validator(){
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		err := v.RegisterValidation("checkVersion", vaildate.CheckVersion)
-		if err!=nil {
-			panic(err)
-		}
+		validation.Register(v, "checkVersion", validation.CheckVersion)
+		validation.Register(v, "checkValues", validation.CheckValues)
 	}
 }
 

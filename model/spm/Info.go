@@ -1,8 +1,9 @@
-package model
+package spm
 
 import (
 	"gopkg.in/go-playground/validator.v8"
 	"spm-serv/core"
+	"spm-serv/model"
 )
 
 //InfoRequest 详情接口请求参数
@@ -29,16 +30,16 @@ func (i *InfoRequest) GetError(err validator.ValidationErrors) string{
 
 //InfoResponse 详情接口返回信息
 type InfoResponse struct {
-	BaseResponse
+	model.BaseResponse
 	//返回数据
 	Data *InfoResponseData	`json:"data"`
 }
 //InfoResponseData 详情接口返回数据
 type InfoResponseData struct {
-	Package Package		`json:"package"`
-	Author Author		`json:"author"`
-	Repository Repository	`json:"repository"`
-	Version string 		`json:"version"`
-	Dependencies []string	`json:"dependencies"`
-	PriFilename	string 	`json:"priFilename"`
+	Package      Package    `json:"package"`
+	Author       Author     `json:"author"`
+	Repository   Repository `json:"repository"`
+	Version      string     `json:"version"`
+	Dependencies []string   `json:"dependencies"`
+	PriFilename  string     `json:"priFilename"`
 }

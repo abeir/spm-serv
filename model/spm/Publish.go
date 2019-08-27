@@ -1,8 +1,9 @@
-package model
+package spm
 
 import (
 	"gopkg.in/go-playground/validator.v8"
 	"spm-serv/core"
+	"spm-serv/model"
 )
 
 //Package 包信息
@@ -83,5 +84,5 @@ func (p *PublishRequest) GetError(err validator.ValidationErrors) string{
 
 //PublishResponse 推送接口返回信息
 type PublishResponse struct {
-	BaseResponse
+	model.BaseResponse
 }

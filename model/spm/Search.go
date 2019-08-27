@@ -1,8 +1,9 @@
-package model
+package spm
 
 import (
 	"gopkg.in/go-playground/validator.v8"
 	"spm-serv/core"
+	"spm-serv/model"
 )
 
 //SearchRequest 查询接口请求参数
@@ -27,7 +28,7 @@ func (s *SearchRequest) GetError(err validator.ValidationErrors) string{
 
 //SearchResponse 查询接口返回信息
 type SearchResponse struct {
-	BaseResponse
+	model.BaseResponse
 	//返回数据
 	Data []*SearchResponseData		`json:"data"`
 }

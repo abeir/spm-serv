@@ -5,24 +5,32 @@ import (
 	"gopkg.in/go-playground/validator.v8"
 	"net/http"
 	"spm-serv/model"
+	"spm-serv/model/spm"
 	"spm-serv/service"
 )
 
-func Ping(c *gin.Context){
+var spmService = &service.SpmService{}
+
+type SpmController struct {
+}
+
+//回响测试
+func (s *SpmController) Ping(c *gin.Context){
 	c.JSON(http.StatusOK, model.BaseResponse{
 		Code: model.CODE_SUCCESS,
 		Msg:  "pong",
 	})
 }
 
-func Publish(c *gin.Context) {
-	req := &model.PublishRequest{}
+//发布包
+func (s *SpmController) Publish(c *gin.Context) {
+	req := &spm.PublishRequest{}
 	err := c.ShouldBindJSON(req)
 	if err!=nil {
 		c.JSON(http.StatusOK, model.FailResponse(req.GetError(err.(validator.ValidationErrors))))
 		return
 	}
-	rsp, err := service.PublicshService(req)
+	rsp, err := spmService.PublicshService(req)
 	if err!=nil {
 		c.JSON(http.StatusOK, model.FailResponse(err.Error()))
 		return
@@ -30,14 +38,15 @@ func Publish(c *gin.Context) {
 	c.JSON(http.StatusOK, rsp)
 }
 
-func Search(c *gin.Context) {
-	req := &model.SearchRequest{}
+//检索包
+func (s *SpmController) Search(c *gin.Context) {
+	req := &spm.SearchRequest{}
 	err := c.ShouldBindQuery(req)
 	if err!=nil {
 		c.JSON(http.StatusOK, model.FailResponse(req.GetError(err.(validator.ValidationErrors))))
 		return
 	}
-	rsp, err := service.SearchService(req)
+	rsp, err := spmService.SearchService(req)
 	if err!=nil {
 		c.JSON(http.StatusOK, model.FailResponse(err.Error()))
 		return
@@ -45,14 +54,15 @@ func Search(c *gin.Context) {
 	c.JSON(http.StatusOK, rsp)
 }
 
-func Info(c *gin.Context) {
-	req := &model.InfoRequest{}
+//查询包信息
+func (s *SpmController) Info(c *gin.Context) {
+	req := &spm.InfoRequest{}
 	err := c.ShouldBindQuery(req)
 	if err!=nil {
 		c.JSON(http.StatusOK, model.FailResponse(req.GetError(err.(validator.ValidationErrors))))
 		return
 	}
-	rsp, err := service.InfoService(req)
+	rsp, err := spmService.InfoService(req)
 	if err!=nil {
 		c.JSON(http.StatusOK, model.FailResponse(err.Error()))
 		return
@@ -60,14 +70,15 @@ func Info(c *gin.Context) {
 	c.JSON(http.StatusOK, rsp)
 }
 
-func Upgrade(c *gin.Context){
-	req := &model.UpgradeRequest{}
+//检查spm更新
+func (s *SpmController) Upgrade(c *gin.Context){
+	req := &spm.UpgradeRequest{}
 	err := c.ShouldBindQuery(req)
 	if err!=nil {
 		c.JSON(http.StatusOK, model.FailResponse(req.GetError(err.(validator.ValidationErrors))))
 		return
 	}
-	rsp, err := service.UpgradeService(req)
+	rsp, err := spmService.UpgradeService(req)
 	if err!=nil {
 		c.JSON(http.StatusOK, model.FailResponse(err.Error()))
 		return
@@ -75,14 +86,15 @@ func Upgrade(c *gin.Context){
 	c.JSON(http.StatusOK, rsp)
 }
 
-func Download(c *gin.Context){
-	req := &model.UpgradeRequest{}
+//下载spm
+func (s *SpmController) Download(c *gin.Context){
+	req := &spm.UpgradeRequest{}
 	err := c.ShouldBindQuery(req)
 	if err!=nil {
 		c.JSON(http.StatusOK, model.FailResponse(req.GetError(err.(validator.ValidationErrors))))
 		return
 	}
-	path, err := service.DownloadVersion(req)
+	path, err := spmService.DownloadVersion(req)
 	if err!=nil {
 		c.JSON(http.StatusOK, model.FailResponse(err.Error()))
 		return
