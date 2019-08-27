@@ -5,6 +5,11 @@ import (
 	"spm-serv/model/po"
 )
 
+func NewUpgradeVersionDao(db *gorm.DB) *UpgradeVersionDao{
+	return &UpgradeVersionDao{db}
+}
+
+
 type UpgradeVersionDao struct {
 	db *gorm.DB
 }

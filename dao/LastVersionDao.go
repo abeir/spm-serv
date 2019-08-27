@@ -5,12 +5,12 @@ import (
 	"spm-serv/model/po"
 )
 
-type LastVersionDao struct {
-	db *gorm.DB
+func NewLastVersionDao(db *gorm.DB) *LastVersionDao{
+	return &LastVersionDao{db}
 }
 
-func (l *LastVersionDao) SetDb(db *gorm.DB){
-	l.db = db
+type LastVersionDao struct {
+	db *gorm.DB
 }
 
 func (l *LastVersionDao) SelectByPkgNameLike(pkgName string) []po.LastVersion {

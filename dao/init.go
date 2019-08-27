@@ -9,12 +9,13 @@ import (
 	"spm-serv/core"
 )
 
-var LastVersionDaoImpl LastVersionDao
-var PackageProfileDaoImpl PackageProfileDao
-var UpgradeVersionDaoImpl UpgradeVersionDao
+var LastVersionDaoImpl *LastVersionDao
+var PackageProfileDaoImpl *PackageProfileDao
+var UpgradeVersionDaoImpl *UpgradeVersionDao
 
 var db *gorm.DB
 
+//关闭db，应在关闭服务器时调用
 func CloseDb(){
 	if db!=nil {
 		err := db.Close()
@@ -33,12 +34,34 @@ func InitDao(config *core.Config){
 	db.LogMode(true)
 	db.SetLogger(core.Log)
 
-	LastVersionDaoImpl = LastVersionDao{db}
-	PackageProfileDaoImpl = PackageProfileDao{db}
-	UpgradeVersionDaoImpl = UpgradeVersionDao{db}
+	LastVersionDaoImpl = NewLastVersionDao(db)
+	PackageProfileDaoImpl = NewPackageProfileDao(db)
+	UpgradeVersionDaoImpl = NewUpgradeVersionDao(db)
 }
 
 
-func UUID() string{
+type CommonDao struct {
+	db *gorm.DB
+}
+
+func (CommonDao) UUID() string{
 	return uuid.NewV4().String()
 }
+
+func (a *CommonDao) Tx(f func()error) error{
+	tx := a.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	if err := tx.Error; err != nil {
+		return err
+	}
+	if err := f(); err!=nil {
+		_ = tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
+}
+

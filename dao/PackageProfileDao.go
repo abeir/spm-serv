@@ -6,12 +6,16 @@ import (
 	"spm-serv/model/po"
 )
 
-type PackageProfileDao struct {
-	db *gorm.DB
+func NewPackageProfileDao(db *gorm.DB) *PackageProfileDao{
+	return &PackageProfileDao{
+		CommonDao: CommonDao{db},
+		db:          db,
+	}
 }
 
-func (p *PackageProfileDao) SetDb(db *gorm.DB){
-	p.db = db
+type PackageProfileDao struct {
+	CommonDao
+	db *gorm.DB
 }
 
 func (p *PackageProfileDao) SelectByPkgNameAndPkgVersion(pkgName, pkgVersion string) po.PackageProfile{
@@ -47,21 +51,4 @@ func (p *PackageProfileDao) SelectPageList(req pkg.PackageListReq) []po.PackageP
 	var list []po.PackageProfile
 	p.db.Offset(req.GetPage()).Limit(req.GetRow()).Where(&po.PackageProfile{PkgName:req.PkgName, PkgVersion:req.PkgVersion}).Find(&list)
 	return list
-}
-
-func (p *PackageProfileDao) Tx(f func()error) error{
-	tx := p.db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-	if err := tx.Error; err != nil {
-		return err
-	}
-	if err := f(); err!=nil {
-		_ = tx.Rollback()
-		return err
-	}
-	return tx.Commit().Error
 }

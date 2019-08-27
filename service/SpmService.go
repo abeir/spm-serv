@@ -78,7 +78,7 @@ func (s *SpmService) PublicshService(request *spm.PublishRequest) (*spm.PublishR
 	core.Log.Debugf("PublicshService request: %+v\n", request)
 
 	newPkgProfile := po.PackageProfile{
-		Id:			 dao.UUID(),
+		Id:			 core.UUID(),
 		PkgName:     request.Package.Name,
 		PkgDesc:     request.Package.Description,
 		RepoUrl:     request.Repository.Url,
@@ -126,7 +126,7 @@ func (s *SpmService) updateLastPackage(pkgProfile *po.PackageProfile) error{
 	lastVersion := dao.LastVersionDaoImpl.SelectByPkgName(pkgProfile.PkgName)
 	if lastVersion.IsEmpty() {
 		newLastVersion := po.LastVersion{
-			Id: dao.UUID(),
+			Id: core.UUID(),
 			PkgName: pkgProfile.PkgName,
 			PkgVersion: pkgProfile.PkgVersion,
 			PkgProfileId: pkgProfile.Id,
