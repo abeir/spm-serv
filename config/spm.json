@@ -4,8 +4,8 @@
     {
       "profile": "dev",
       "database": {
-        "name": "sqlite3",
-        "url": "/home/abeir/workspace/syberos/spm-serv/data.db"
+        "name": "mysql",
+        "url": "root:123456@tcp(127.0.0.1:3306)/spm?charset=utf8mb4&parseTime=True&loc=Local"
       },
       "server": {
         "port": "8000"
@@ -20,8 +20,8 @@
     },{
       "profile": "prod",
       "database": {
-        "name": "sqlite3",
-        "url": "/home/abeir/workspace/syberos/spm-serv/data.db"
+        "name": "mysql",
+        "url": "root:123456@tcp(127.0.0.1:3306)/spm?charset=utf8mb4&parseTime=True&loc=Local"
       },
       "server": {
         "port": "8000"

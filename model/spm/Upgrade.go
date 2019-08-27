@@ -1,8 +1,9 @@
-package model
+package spm
 
 import (
 	"gopkg.in/go-playground/validator.v8"
 	"spm-serv/core"
+	"spm-serv/model"
 )
 
 type UpgradeRequest struct {
@@ -27,7 +28,7 @@ func (p *UpgradeRequest) GetError(err validator.ValidationErrors) string{
 
 //UpgradeResponse 查询新版本
 type UpgradeResponse struct {
-	BaseResponse
+	model.BaseResponse
 	//返回数据
 	Data *UpgradeResponseData	`json:"data"`
 }
