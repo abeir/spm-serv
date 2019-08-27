@@ -1,0 +1,54 @@
+{
+  "environment": "dev",
+  "configurations": [
+    {
+      "profile": "dev",
+      "database": {
+        "name": "sqlite3",
+        "url": "/home/abeir/workspace/syberos/spm-serv/data.db"
+      },
+      "server": {
+        "port": "8000"
+      },
+      "logger": {
+        "level": "debug",
+        "path": "/home/abeir/doc/test",
+        "filename": "demo",
+        "maxAge": 86400,
+        "rotationTime":1440
+      }
+    },{
+      "profile": "prod",
+      "database": {
+        "name": "sqlite3",
+        "url": "/home/abeir/workspace/syberos/spm-serv/data.db"
+      },
+      "server": {
+        "port": "8000"
+      },
+      "logger": {
+        "level": "debug",
+        "path": "/home/abeir/doc/test",
+        "filename": "demo",
+        "maxAge": 86400,
+        "rotationTime":1440
+      }
+    },{
+      "profile": "test",
+      "database": {
+        "name": "sqlite3",
+        "url": "/home/abeir/workspace/syberos/spm-serv/data.db"
+      },
+      "server": {
+        "port": "8000"
+      },
+      "logger": {
+        "level": "debug",
+        "path": "/home/abeir/doc/test",
+        "filename": "demo",
+        "maxAge": 86400,
+        "rotationTime":1440
+      }
+    }
+  ]
+}

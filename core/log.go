@@ -6,7 +6,6 @@ import (
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"path"
-	"strings"
 	"time"
 )
 
@@ -52,42 +51,39 @@ func IsPanicEnabled() bool{
 	return Log.GetLevel() <= logrus.PanicLevel
 }
 
-
-func initLog(config *Config){
-	configLocalFilesystemLogger("/home/abeir/doc/test", "demo", time.Minute * 60 * 24 * 60, time.Minute * 60 * 24)
-
-	lv := toLevel(config.Logger.Level)
-	if lv < 0 {
-		panic(errors.New(""))
+//初始化日志
+func InitLog(config *Config){
+	var maxAgeDuration time.Duration
+	var rotationTimeDuration time.Duration
+	maxAge := config.Logger.MaxAge
+	if maxAge <= 0 {
+		maxAgeDuration = time.Hour * 24 * 60		//60天
+	}else{
+		maxAgeDuration = time.Minute * maxAge
 	}
-	Log.SetLevel(lv)
-}
-
-func toLevel(levelString string) logrus.Level{
-	switch strings.ToLower(levelString) {
-	case Trace:
-		return logrus.TraceLevel
-	case Debug:
-		return logrus.DebugLevel
-	case Info:
-		return logrus.InfoLevel
-	case Warn:
-		return logrus.WarnLevel
-	case Error:
-		return logrus.ErrorLevel
-	case Fatal:
-		return logrus.FatalLevel
-	case Panic:
-		return logrus.PanicLevel
-	default:
-		return -1
+	rotationTime := config.Logger.RotationTime
+	if rotationTime <= 0 {
+		rotationTimeDuration = time.Hour * 24	//1天
+	}else{
+		rotationTimeDuration = time.Minute * rotationTime
 	}
+	configLocalFilesystemLogger(config.Logger.Level,
+		config.Logger.Path,
+		config.Logger.Filename,
+		maxAgeDuration,
+		rotationTimeDuration)
 }
-
 
 // config logrus log to local filesystem, with file rotation
-func configLocalFilesystemLogger(logPath string, logFileName string, maxAge time.Duration, rotationTime time.Duration) {
+func configLocalFilesystemLogger(level string, logPath string, logFileName string,
+				maxAge time.Duration, rotationTime time.Duration) {
 	Log = logrus.New()
+
+	lv, err := logrus.ParseLevel(level)
+	if err!=nil {
+		panic(err)
+	}
+	Log.SetLevel(lv)
 
 	baseLogPath := path.Join(logPath, logFileName)
 	writer, err := rotatelogs.New(
@@ -98,6 +94,7 @@ func configLocalFilesystemLogger(logPath string, logFileName string, maxAge time
 	)
 	if err != nil {
 		Log.Errorf("config local file system logger error. %+v", errors.WithStack(err))
+		panic(err)
 	}
 
 	lfHook := lfshook.NewHook(lfshook.WriterMap{

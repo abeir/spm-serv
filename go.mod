@@ -3,7 +3,7 @@ module spm-serv
 go 1.12
 
 require (
-	github.com/abeir/GoMybatis v0.0.0-20190815022103-f688082f206d
+	github.com/abeir/GoMybatis v0.0.0-20190822104912-179dd769f583
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
 	github.com/gin-gonic/gin v1.4.0
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
@@ -17,4 +17,5 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/tebeka/strftime v0.1.3 // indirect
 	gopkg.in/go-playground/validator.v8 v8.18.2
+	gopkg.in/yaml.v2 v2.2.2
 )
