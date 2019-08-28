@@ -7,19 +7,21 @@ import (
 )
 
 type UpgradeVersion struct {
+	//ID
 	Id string			`json:"id" gorm:"primary_key,column:id"`
-
+	//版本号
 	Version string 		`json:"version" gorm:"column:version"`
-
+	//版本排序字段
 	VersionSort string	`json:"versionSort" gorm:"column:version_sort"`
-
+	//描述信息
 	Description string 	`json:"description" gorm:"column:description"`
-
+	//文件路径
 	Path string 		`json:"path" gorm:"column:path"`
-
+	//发布状态 0为未发布， 1为已发布， 2为已下架
 	Status	string 		`json:"status" gorm:"column:status"`
-
+	//创建时间
 	CreatedAt time.Time	`json:"createdAt" gorm:"column:created_at"`
+	//修改时间
 	UpdatedAt time.Time `json:"updatedAt" gorm:"column:updated_at"`
 }
 

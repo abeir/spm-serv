@@ -3,8 +3,9 @@ package po
 import (
 	"time"
 )
-
+//包详情信息
 type PackageProfile struct {
+	//ID
 	Id string			`json:"id" gorm:"primary_key,column:id"`
 	//包名
 	PkgName string		`json:"pkgName" gorm:"column:pkg_name"`
@@ -22,10 +23,11 @@ type PackageProfile struct {
 	AuthorDesc string `json:"authorDesc" gorm:"column:author_desc"`
 	//pri文件名
 	PriFilename string `json:"priFilename" gorm:"column:pri_filename"`
-
+	//可用状态 0为不可用，1为可用
 	Status	string 		`json:"status" gorm:"column:status"`
-
+	//创建时间
 	CreatedAt time.Time	`json:"createdAt" gorm:"column:created_at"`
+	//修改时间
 	UpdatedAt time.Time `json:"updatedAt" gorm:"column:updated_at"`
 }
 
