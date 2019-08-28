@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -31,6 +32,7 @@ func InitDao(config *core.Config){
 	if err!=nil {
 		core.Log.Panicf("cannot open database: %s, %s, %+v", config.Database.Name, config.Database.Url, errors.WithStack(err))
 	}
+	fmt.Println("open database:", config.Database.Name)
 	db.LogMode(true)
 	db.SetLogger(core.Log)
 
