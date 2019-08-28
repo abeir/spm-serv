@@ -2,6 +2,7 @@ package core
 
 import (
 	"errors"
+	uuid "github.com/satori/go.uuid"
 	"io"
 	"os"
 	"strings"
@@ -40,4 +41,9 @@ func PadLeft(s string, pad string, len int) (string, error){
 	}
 	pads := strings.Repeat(pad, len - sLen)
 	return pads + s, nil
+}
+
+// 生成uuid，注意：并没有去除"-"分隔符
+func UUID() string{
+	return uuid.NewV4().String()
 }

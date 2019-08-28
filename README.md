@@ -8,7 +8,7 @@ Web框架
 [Gin](https://github.com/gin-gonic/gin)
 
 ORM框架
-[GoMybatis](https://github.com/zhuxiujia/GoMybatis)
+[Gorm](https://github.com/jinzhu/gorm)
 
 Log框架
 [Logrus](https://github.com/sirupsen/logrus)
