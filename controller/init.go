@@ -4,13 +4,17 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"gopkg.in/go-playground/validator.v8"
+	"spm-serv/controller/middleware"
 	"spm-serv/controller/validation"
 	"spm-serv/core"
 	"time"
 )
 
+//var globalMiddleware = &middleware.GlobalMiddleware{}
+
 func Router(engine *gin.Engine){
 	spmController := SpmController{}
+	//engine.Use(middleware.Authorize())
 	engine.GET("/ping", spmController.Ping)
 	engine.POST("/publish", spmController.Publish)
 	engine.GET("/search", spmController.Search)
@@ -19,29 +23,31 @@ func Router(engine *gin.Engine){
 	engine.GET("/download", spmController.Download)
 
 	console := engine.Group("/console")
+	//console.Use(middleware.Authorize())
 	{
 		consoleController := ConsoleController{}
 		console.POST("/login", consoleController.Login)
-		console.POST("/logout", consoleController.Logout)
+		console.POST("/logout", middleware.Authorize(), consoleController.Logout)
 	}
 	upgrade := engine.Group("/upgrade")
 	{
 		upgradeController := UpgradeVersionController{}
 		upgrade.GET("/list", upgradeController.List)
 		upgrade.GET("/info", upgradeController.Info)
-		upgrade.PUT("/upload", upgradeController.Upload)
-		upgrade.PUT("/release", upgradeController.Release)
-		upgrade.PUT("/detain", upgradeController.Detain)
+		upgrade.PUT("/upload",  middleware.Authorize(), upgradeController.Upload)
+		upgrade.PUT("/release", middleware.Authorize(), upgradeController.Release)
+		upgrade.PUT("/detain",  middleware.Authorize(), upgradeController.Detain)
 	}
 	pkg := engine.Group("/package")
 	{
 		packageController := PackageController{}
 		pkg.GET("/list", packageController.List)
 		pkg.GET("/info", packageController.Info)
-		pkg.PUT("/enable", packageController.Enable)
-		pkg.PUT("/disable", packageController.Disable)
+		pkg.PUT("/enable", middleware.Authorize(), packageController.Enable)
+		pkg.PUT("/disable", middleware.Authorize(), packageController.Disable)
 	}
 }
+
 
 func Validator(){
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {

@@ -12,6 +12,7 @@ import (
 var LastVersionDaoImpl *LastVersionDao
 var PackageProfileDaoImpl *PackageProfileDao
 var UpgradeVersionDaoImpl *UpgradeVersionDao
+var ConsoleUserDaoImpl *ConsoleUserDao
 
 var db *gorm.DB
 
@@ -37,6 +38,7 @@ func InitDao(config *core.Config){
 	LastVersionDaoImpl = NewLastVersionDao(db)
 	PackageProfileDaoImpl = NewPackageProfileDao(db)
 	UpgradeVersionDaoImpl = NewUpgradeVersionDao(db)
+	ConsoleUserDaoImpl = NewConsoleUserDao(db)
 }
 
 

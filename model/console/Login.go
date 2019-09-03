@@ -33,6 +33,10 @@ func (l *LoginReq) GetError(err validator.ValidationErrors) string{
 
 type LoginRsp struct {
 	model.BaseResponse
+	Data *LoginRspData  `json:"data"`
+}
+
+type LoginRspData struct {
 	Token string 		`json:"token"`
 }
 
