@@ -17,13 +17,13 @@ type UpgradeVersionDao struct {
 //查询最新的版本
 func (u *UpgradeVersionDao) SelectLatestVersion() po.UpgradeVersion{
 	result := po.UpgradeVersion{}
-	u.db.Where("version_sort = ?", u.db.Table("upgrade_version").Select("max(version_sort)").QueryExpr()).First(&result)
+	u.db.Where("version_sort = (?)", u.db.Table("upgrade_version").Select("max(version_sort)").QueryExpr()).First(&result)
 	return result
 }
 
-func (u *UpgradeVersionDao) SelectByVersion(version string) po.UpgradeVersion{
+func (u *UpgradeVersionDao) SelectByVersionRelease(version string) po.UpgradeVersion{
 	result := po.UpgradeVersion{}
-	u.db.Where("version = ?", version).First(&result)
+	u.db.Where("version = ? and status = '1'", version).First(&result)
 	return result
 }
 //指定版本号的数量
