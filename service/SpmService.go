@@ -173,6 +173,11 @@ func (s *SpmService) UpgradeService(req *spm.UpgradeRequest) (*spm.UpgradeRespon
 		rsp.Code = model.CODE_ERROR
 		rsp.Msg = "It's the latest version"
 		return rsp, nil
+	//版本状态未发布
+	} else if !upgradeVersion.IsReleased() {
+		rsp.Code = model.CODE_ERROR
+		rsp.Msg = "Invalid version"
+		return rsp, nil
 	}
 	//判断数据库中版本与上传的版本号大小
 	verInDb, err := core.NewVersion(upgradeVersion.Version)
@@ -199,7 +204,7 @@ func (s *SpmService) UpgradeService(req *spm.UpgradeRequest) (*spm.UpgradeRespon
 func (s *SpmService) DownloadVersion(req *spm.UpgradeRequest) (string, error){
 	core.Log.Debugf("DownloadVersion request: %+v\n", req)
 
-	upgradeVersion := dao.UpgradeVersionDaoImpl.SelectByVersion(req.Version)
+	upgradeVersion := dao.UpgradeVersionDaoImpl.SelectByVersionRelease(req.Version)
 	core.Log.Debugf("upgradeVersion: %+v\n", upgradeVersion)
 	return upgradeVersion.Path, nil
 }

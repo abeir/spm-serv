@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
+	"os"
 	"path"
 	"time"
 )
@@ -66,6 +67,12 @@ func InitLog(config *Config){
 // config logrus log to local filesystem, with file rotation
 func configLocalFilesystemLogger(level string, logPath string, logFileName string,
 				maxAge time.Duration, rotationTime time.Duration) {
+	if !IsExists(logPath) {
+		err := os.MkdirAll(logPath, os.ModePerm)
+		if err!=nil {
+			panic(err)
+		}
+	}
 	Log = logrus.New()
 
 	lv, err := logrus.ParseLevel(level)
