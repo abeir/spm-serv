@@ -1,6 +1,8 @@
 package core
 
 import (
+	"fmt"
+	"github.com/gookit/color"
 	"github.com/lestrrat-go/file-rotatelogs"
 	"github.com/pkg/errors"
 	"github.com/rifflock/lfshook"
@@ -46,16 +48,24 @@ func InitLog(config *Config){
 	var maxAgeDuration time.Duration
 	var rotationTimeDuration time.Duration
 	maxAge := config.Logger.MaxAge
-	if maxAge <= 0 {
+	if maxAge=="" {
 		maxAgeDuration = time.Hour * 24 * 60		//60天
 	}else{
-		maxAgeDuration = time.Minute * maxAge
+		duration, err := time.ParseDuration(maxAge)
+		if err!=nil {
+			panic(fmt.Sprintf("init log maxAge fail: %s, %s", maxAge, err.Error()))
+		}
+		maxAgeDuration = duration
 	}
 	rotationTime := config.Logger.RotationTime
-	if rotationTime <= 0 {
+	if rotationTime=="" {
 		rotationTimeDuration = time.Hour * 24	//1天
 	}else{
-		rotationTimeDuration = time.Minute * rotationTime
+		duration, err := time.ParseDuration(rotationTime)
+		if err!=nil {
+			panic(fmt.Sprintf("init log rotationTime fail: %s, %s", rotationTime, err.Error()))
+		}
+		rotationTimeDuration = duration
 	}
 	configLocalFilesystemLogger(config.Logger.Level,
 		config.Logger.Path,
@@ -67,6 +77,9 @@ func InitLog(config *Config){
 // config logrus log to local filesystem, with file rotation
 func configLocalFilesystemLogger(level string, logPath string, logFileName string,
 				maxAge time.Duration, rotationTime time.Duration) {
+	color.Printf("<light_green>ready to init log:</> level:%s, logPath:%s, logFilename:%s, maxAge:%s, rotationTime:%s \n",
+		level, logPath, logFileName, maxAge.String(), rotationTime.String())
+
 	if !IsExists(logPath) {
 		err := os.MkdirAll(logPath, os.ModePerm)
 		if err!=nil {
@@ -83,7 +96,7 @@ func configLocalFilesystemLogger(level string, logPath string, logFileName strin
 
 	baseLogPath := path.Join(logPath, logFileName)
 	writer, err := rotatelogs.New(
-		baseLogPath+".%Y%m%d",
+		baseLogPath+".%Y%m%d%H%M",
 		rotatelogs.WithLinkName(baseLogPath), // 生成软链，指向最新日志文件
 		rotatelogs.WithMaxAge(maxAge), // 文件最大保存时间
 		rotatelogs.WithRotationTime(rotationTime), // 日志切割时间间隔

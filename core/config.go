@@ -3,12 +3,11 @@ package core
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
+	"github.com/gookit/color"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"time"
 )
 
 //环境变量配置的spm配置文件路径
@@ -27,8 +26,8 @@ type Logger struct {
 	Level string 		`json:"level" yaml:"level"`
 	Path string 		`json:"path" yaml:"path"`
 	Filename string 	`json:"filename" yaml:"filename"`
-	MaxAge time.Duration 		`json:"maxAge" yaml:"maxAge"`
-	RotationTime time.Duration 	`json:"rotationTime" yaml:"rotationTime"`
+	MaxAge string 		`json:"maxAge" yaml:"maxAge"`
+	RotationTime string 	`json:"rotationTime" yaml:"rotationTime"`
 }
 
 type EnvironmentConfig struct {
@@ -59,12 +58,14 @@ func (c *Config) findEnvironmentConfig(content *ConfigContent, env string) {
 	for _, config := range content.Configurations {
 		if config.Profile==env {
 			c.EnvironmentConfig = config
+			color.Printf("<light_green>global config:</> %+v\n", c.EnvironmentConfig)
 			return
 		}
 	}
 }
 
 func (c *Config) loadFromJson(path string) error{
+	color.Println("<light_green>load config from:</>", path)
 	data, err := ioutil.ReadFile(path)
 	if err!=nil {
 		return err
@@ -80,6 +81,7 @@ func (c *Config) loadFromJson(path string) error{
 }
 
 func (c *Config) loadFromYml(path string) error{
+	color.Println("<light_green>load config from:</>", path)
 	data, err := ioutil.ReadFile(path)
 	if err!=nil {
 		return err
@@ -118,7 +120,7 @@ func (c *Config) LoadFromEnvVar() (bool, error){
 	if configFile=="" {
 		return false, nil
 	}
-	fmt.Println("load config from environment variable:", SpmConfigEnvVar, configFile)
+	color.Println("<light_green>load config from environment variable:</>", SpmConfigEnvVar, configFile)
 	extName := filepath.Ext(configFile)
 	if extName==".yaml" || extName==".yml" {
 		return true, c.loadFromYml(configFile)
@@ -143,7 +145,6 @@ func (c *Config) Load() error{
 	if err!=nil {
 		return err
 	}
-	fmt.Println("load config from:", currentPath)
 	configFile := filepath.Join(currentPath, "config", "spm.yml")
 	if IsExists(configFile) {
 		return c.loadFromYml(configFile)
