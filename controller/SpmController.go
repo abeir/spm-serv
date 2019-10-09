@@ -87,6 +87,7 @@ func (s *SpmController) Upgrade(c *gin.Context){
 }
 
 //下载spm
+//参数version可为latest，表示下载最新版本
 func (s *SpmController) Download(c *gin.Context){
 	req := &spm.UpgradeRequest{}
 	err := c.ShouldBindQuery(req)

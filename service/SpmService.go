@@ -6,6 +6,7 @@ import (
 	"spm-serv/model"
 	"spm-serv/model/po"
 	"spm-serv/model/spm"
+	"strings"
 	"time"
 )
 
@@ -201,10 +202,16 @@ func (s *SpmService) UpgradeService(req *spm.UpgradeRequest) (*spm.UpgradeRespon
 }
 
 //下载版本，返回待下载的文件路径
+//当version=latest时，下载最新的版本
 func (s *SpmService) DownloadVersion(req *spm.UpgradeRequest) (string, error){
 	core.Log.Debugf("DownloadVersion request: %+v\n", req)
 
-	upgradeVersion := dao.UpgradeVersionDaoImpl.SelectByVersionRelease(req.Version)
+	var upgradeVersion po.UpgradeVersion
+	if strings.ToLower(req.Version)=="latest" {
+		upgradeVersion = dao.UpgradeVersionDaoImpl.SelectLatestVersion()
+	} else {
+		upgradeVersion = dao.UpgradeVersionDaoImpl.SelectByVersionRelease(req.Version)
+	}
 	core.Log.Debugf("upgradeVersion: %+v\n", upgradeVersion)
 	return upgradeVersion.Path, nil
 }

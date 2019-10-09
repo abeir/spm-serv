@@ -17,7 +17,7 @@ type UpgradeVersionDao struct {
 //查询最新的版本
 func (u *UpgradeVersionDao) SelectLatestVersion() po.UpgradeVersion{
 	result := po.UpgradeVersion{}
-	u.db.Where("version_sort = (?)", u.db.Table("upgrade_version").Select("max(version_sort)").QueryExpr()).First(&result)
+	u.db.Where("version_sort = (?) and status = '1'", u.db.Table("upgrade_version").Select("max(version_sort)").QueryExpr()).First(&result)
 	return result
 }
 
