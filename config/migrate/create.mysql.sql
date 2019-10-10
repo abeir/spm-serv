@@ -12,7 +12,7 @@ create table package_profile (
     created_at datetime,
     updated_at datetime
 );
-alter table package_profile add index idx_pkg_prf_name_version(pkg_name, pkg_version);
+alter table package_profile add index idx_pkg_prf_name_ver(pkg_name, pkg_version);
 
 create table last_version (
     id  varchar(64) primary key,
@@ -23,7 +23,7 @@ create table last_version (
     updated_at datetime
 );
 alter table last_version add index idx_lst_ver_name(pkg_name);
-alter table last_version add index idx_lst_ver_name_version(pkg_name, pkg_version);
+alter table last_version add index idx_lst_ver_name_ver(pkg_name, pkg_version);
 alter table last_version add index idx_lst_ver_pkg_prf_id(pkg_profile_id);
 alter table last_version add index idx_lst_ver_crt_at(created_at);
 
@@ -38,8 +38,8 @@ create table upgrade_version (
     created_at datetime,
     updated_at datetime
 );
-alter table upgrade_version add index idx_upd_ver_version(version);
-alter table upgrade_version add index idx_upd_ver_version_sort(version_sort);
+alter table upgrade_version add index idx_upd_ver_ver(version);
+alter table upgrade_version add index idx_upd_ver_ver_sort(version_sort);
 
 
 create table console_user (
