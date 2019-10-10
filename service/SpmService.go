@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"spm-serv/core"
 	"spm-serv/dao"
 	"spm-serv/model"
@@ -211,6 +212,9 @@ func (s *SpmService) DownloadVersion(req *spm.UpgradeRequest) (string, error){
 		upgradeVersion = dao.UpgradeVersionDaoImpl.SelectLatestVersion()
 	} else {
 		upgradeVersion = dao.UpgradeVersionDaoImpl.SelectByVersionRelease(req.Version)
+	}
+	if !core.IsExists(upgradeVersion.Path) {
+		return "", errors.New("spm path not exits")
 	}
 	core.Log.Debugf("upgradeVersion: %+v\n", upgradeVersion)
 	return upgradeVersion.Path, nil
