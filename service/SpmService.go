@@ -58,7 +58,7 @@ func (s *SpmService) InfoService(req *spm.InfoRequest) (*spm.InfoResponse, error
 func (s *SpmService) SearchService(req *spm.SearchRequest) (*spm.SearchResponse, error){
 	core.Log.Debugf("SearchService request: %+v\n", req)
 
-	pkgProfiles := dao.PackageProfileDaoImpl.SelectLastVersionByPkgNameLike("%" + req.PackageName + "%")
+	pkgProfiles := dao.PackageProfileDaoImpl.SelectLastVersionByPkgNameLike(req.PackageName)
 	var data []*spm.SearchResponseData
 	for _, pkg := range pkgProfiles {
 		data = append(data, &spm.SearchResponseData{
@@ -89,6 +89,7 @@ func (s *SpmService) PublicshService(request *spm.PublishRequest) (*spm.PublishR
 		AuthorEmail: request.Author.Email,
 		AuthorDesc:  request.Author.Description,
 		PriFilename: request.PriFilename,
+		Status: "1",
 		CreatedAt:	 time.Now(),
 		UpdatedAt:	 time.Now(),
 	}

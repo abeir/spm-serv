@@ -33,7 +33,7 @@ type PublishRequest struct {
 	Package Package		`json:"package"`
 	Author Author		`json:"author"`
 	Repository Repository	`json:"repository"`
-	Version string		`json:"version" binding:"required,checkVersion"`
+	Version string		`json:"version" binding:"required"`
 	Dependencies []string	`json:"dependencies"`
 	PriFilename	string 	`json:"priFilename" binding:"required"`
 	Force	string		`json:"force"`
