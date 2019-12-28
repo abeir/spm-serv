@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gopkg.in/go-playground/validator.v8"
 	"net/http"
+	"spm-serv/core"
 	"spm-serv/model"
 	"spm-serv/model/console"
 	"spm-serv/service"
@@ -30,6 +31,7 @@ func (c *ConsoleController) Login(ct *gin.Context){
 }
 
 func (c *ConsoleController) Logout(ct *gin.Context){
+	core.Log.Debugf("Logout %+v\n", ct)
 	req := &console.LogoutReq{}
 	err := ct.ShouldBindJSON(req)
 	if err!=nil {
